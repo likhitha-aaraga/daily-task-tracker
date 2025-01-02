@@ -1,0 +1,51 @@
+@import "../global.scss";
+
+// .login {
+//     width: 300px;
+//     margin: 0 auto;
+//     form {
+//         label {
+//             a {
+//                 color: $white;
+//             }
+//         }
+//         .button {
+//             margin-top: 15px;
+//             margin-bottom: 10px;
+//             height: 40px;
+//             padding: 0 20px;
+//             color: $primary-color;
+//             background-color: transparent;
+//             border: 2px solid $primary-color;
+//             border-radius: 8px;
+//             font-size: 14px;
+//             font-weight: $bold;
+//             font-family: $secondary-font;
+//             cursor: pointer;
+//             text-transform: uppercase;
+
+//             &:hover {
+//                 background-color: $green;
+//                 color: $black;
+//             }
+//         }
+//     }
+// }
+
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e9f3f4;
+    margin-top: 138px;
+    margin-bottom: 138px;
+}
+
+.auth-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 90%;
+}
