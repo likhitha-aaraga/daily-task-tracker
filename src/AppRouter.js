@@ -11,6 +11,8 @@ import Register from "./pages/Register";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import MyTasks from "./pages/MyTasks";
+import EmployeeHomepage from "./pages/EmployeeHomepage";
+import ManagerHomepage from "./pages/ManagerHomepage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const AppRouter = () => {
@@ -44,6 +46,11 @@ const AppRouter = () => {
                 />
                 <Route path="/register" element={<Register />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/managerhomepage" element={<ManagerHomepage />} />
+                <Route
+                    path="/employeehomepage"
+                    element={<EmployeeHomepage />}
+                />
             </Routes>
         </Router>
     );
