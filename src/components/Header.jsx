@@ -1,28 +1,30 @@
-// import React from "react";
-// import "../global.scss";
-
-// const Header = () => {
-//     return (
-//         <div className="navbar">
-//             <div className="logo">
-//                 <a href="/">Home</a>
-//             </div>
-//             <div className="nav-links">
-//                 <a href="/about">About</a>
-//                 <a href="/contact">Contact</a>
-//                 <a href="/login">Login</a>
-//                 <a href="/register">Register</a>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Header;
-
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import "../global.scss";
 
 const Header = () => {
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    const handleLogout = async () => {
+        const auth = getAuth();
+
+        try {
+            await signOut(auth);
+            console.log("User logged out successfully");
+        } catch (error) {
+            console.error("Logout error:", error.message);
+        }
+    };
+
     return (
         <div className="navbar">
             <div className="logo">
@@ -36,8 +38,17 @@ const Header = () => {
             <div className="nav-links">
                 <a href="/about">About</a>
                 <a href="/contact">Contact</a>
-                <a href="/login">Login</a>
-                <a href="/register">Register</a>
+                {user ? (
+                    <>
+                        <p>Welcome, {user.email}</p>
+
+                        <button onClick={handleLogout}>Logout</button>
+                    </>
+                ) : (
+                    <a href="/login">
+                        <button>Login</button>
+                    </a>
+                )}
             </div>
         </div>
     );
