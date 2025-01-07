@@ -12,9 +12,8 @@ const EmployeeHomepage = () => {
     const [dueDate, setDueDate] = useState(null);
 
     const handleAddTask = async (e) => {
-        e.preventDefault(); // Prevent default form submission behavior
+        e.preventDefault();
 
-        // Input validation
         if (!taskDetails.trim()) {
             alert("Task details cannot be empty");
             return;
@@ -61,7 +60,6 @@ const EmployeeHomepage = () => {
         <div className="employee-homepage">
             <h2>Employee Dashboard</h2>
             <form onSubmit={handleAddTask}>
-                {/* Task Details */}
                 <div className="form-group">
                     <label htmlFor="taskDetails">Task Details:</label>
                     <textarea
@@ -74,7 +72,6 @@ const EmployeeHomepage = () => {
                     />
                 </div>
 
-                {/* Task Status */}
                 <div className="form-group">
                     <label htmlFor="status">Status:</label>
                     <select
@@ -92,7 +89,6 @@ const EmployeeHomepage = () => {
                     </select>
                 </div>
 
-                {/* Due Date Picker */}
                 <div className="form-group">
                     <label htmlFor="dueDate">Due Date:</label>
                     <DatePicker
@@ -106,7 +102,6 @@ const EmployeeHomepage = () => {
                     />
                 </div>
 
-                {/* Submit Button */}
                 <button type="submit" className="submit-button">
                     Add Task
                 </button>

@@ -11,15 +11,15 @@ const ManagerHomepage = () => {
 
     const fetchTasks = async () => {
         try {
-            const tasksCollection = collection(db, "tasks"); // Reference to "tasks" collection
-            const tasksSnapshot = await getDocs(tasksCollection); // Fetch all documents
+            const tasksCollection = collection(db, "tasks");
+            const tasksSnapshot = await getDocs(tasksCollection);
             const tasksData = tasksSnapshot.docs.map((doc) => ({
-                id: doc.id, // Include document ID
-                ...doc.data(), // Spread the document data
+                id: doc.id,
+                ...doc.data(),
             }));
             setEmployees(tasksData);
-            setFilteredEmployees(tasksData); // Update state with fetched data
-            setLoading(false); // Set loading to false after data is fetched
+            setFilteredEmployees(tasksData);
+            setLoading(false);
         } catch (error) {
             console.error("Error fetching tasks:", error);
             alert("Failed to fetch tasks. Please try again.");
@@ -28,14 +28,14 @@ const ManagerHomepage = () => {
     console.log(filteredEmployees);
     useEffect(() => {
         if (searchQuery.trim() === "") {
-            setFilteredEmployees(employees); // Show all employees if search query is empty
+            setFilteredEmployees(employees);
         } else {
             const filtered = employees.filter((employee) =>
                 employee.createdBy
                     .toLowerCase()
                     .includes(searchQuery.toLowerCase())
             );
-            setFilteredEmployees(filtered); // Set filtered employees
+            setFilteredEmployees(filtered);
         }
     }, [searchQuery, employees]);
 
@@ -43,7 +43,6 @@ const ManagerHomepage = () => {
         fetchTasks();
     }, []);
 
-    // Render loading state
     if (loading) {
         return <p>Loading tasks...</p>;
     }
@@ -55,7 +54,6 @@ const ManagerHomepage = () => {
             </header>
 
             <div className="employee-tasks">
-                {/* Flex container to align Employee Tasks and Search bar in the same line */}
                 <div className="tasks-header">
                     <h3>Employee Tasks</h3>
                     <div className="search-container">

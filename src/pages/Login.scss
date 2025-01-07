@@ -1,37 +1,5 @@
 @import "../global.scss";
 
-// .login {
-//     width: 300px;
-//     margin: 0 auto;
-//     form {
-//         label {
-//             a {
-//                 color: $white;
-//             }
-//         }
-//         .button {
-//             margin-top: 15px;
-//             margin-bottom: 10px;
-//             height: 40px;
-//             padding: 0 20px;
-//             color: $primary-color;
-//             background-color: transparent;
-//             border: 2px solid $primary-color;
-//             border-radius: 8px;
-//             font-size: 14px;
-//             font-weight: $bold;
-//             font-family: $secondary-font;
-//             cursor: pointer;
-//             text-transform: uppercase;
-
-//             &:hover {
-//                 background-color: $green;
-//                 color: $black;
-//             }
-//         }
-//     }
-// }
-
 .auth-page {
     display: flex;
     justify-content: center;

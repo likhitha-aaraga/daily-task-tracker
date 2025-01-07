@@ -1,27 +1,3 @@
-// import React from "react";
-// import "../global.scss";
-
-// const Homepage = () => {
-//     return (
-//         <div className="container">
-//             <div className="hero-section">
-//                 <h1>Welcome to Advent Global Solutions INC</h1>
-//                 <p>
-//                     At Advent Global, we believe that digital assurance is the
-//                     foundation of this transformation.
-//                 </p>
-//             </div>
-//             <div className="cta-card">
-//                 <h2>My Tasks</h2>
-//                 <p>MM-DD-YYYY</p>
-//                 <button>Upload</button>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Homepage;
-
 import React from "react";
 import "../global.scss";
 
