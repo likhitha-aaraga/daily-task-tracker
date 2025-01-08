@@ -38,8 +38,8 @@ const Header = () => {
             <div className="nav-links">
                 <a href="/about">About</a>
                 {/* <a href="/contact">Contact</a> */}
-                <a href="/managerhomepage">Manger Dashboard</a>
-                <a href="/employeehomepage">Employee Dashboard</a>
+                {/* <a href="/managerhomepage">Manger Dashboard</a> */}
+                <a href="/employeehomepage">AddTask</a>
                 {user ? (
                     <>
                         <p>Welcome, {user.email}</p>

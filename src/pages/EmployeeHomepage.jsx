@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./EmployeeHomepage.scss";
 import { db } from "../config/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const EmployeeHomepage = () => {
@@ -41,7 +41,7 @@ const EmployeeHomepage = () => {
                 taskDetails: taskDetails.trim(),
                 status: status,
                 dueDate: dueDate.toISOString(),
-                createdAt: new Date().toISOString(),
+                createdAt: serverTimestamp(),
                 createdBy: currentUser.email,
             });
 
@@ -58,7 +58,7 @@ const EmployeeHomepage = () => {
 
     return (
         <div className="employee-homepage">
-            <h2>Employee Dashboard</h2>
+            <h2>Adding a Task</h2>
             <form onSubmit={handleAddTask}>
                 <div className="form-group">
                     <label htmlFor="taskDetails">Task Details:</label>
@@ -85,7 +85,6 @@ const EmployeeHomepage = () => {
                         </option>
                         <option value="In Progress">In Progress</option>
                         <option value="Completed">Completed</option>
-                        <option value="Pending">Pending</option>
                     </select>
                 </div>
 

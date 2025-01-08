@@ -1,7 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../global.scss";
 
 const Homepage = () => {
+    const navigate = useNavigate();
+
+    const handleRedirect = () => {
+        navigate("/employeehomepage");
+    };
     return (
         <div className="container">
             <div className="hero-section">
@@ -21,8 +27,6 @@ const Homepage = () => {
                         <li>
                             <a href="/MyTasks">My Tasks</a>
                         </li>
-                        <li>Inbox</li>
-                        <li>Message</li>
                     </ul>
                     <h3>Projects</h3>
                     <ul>
@@ -38,25 +42,11 @@ const Homepage = () => {
                     </ul>
                 </div>
                 <div className="main-content">
-                    <div className="dashboard-stats">
-                        <div>Total Projects: 1</div>
-                        <div>Total Tasks: 1</div>
-                        <div>Assigned Tasks: 1</div>
-                        <div>Completed Tasks: 1</div>
-                        <div>Overdue Tasks: 1</div>
-                    </div>
-                    <div className="tasks-section">
-                        <h3>Assigned Tasks</h3>
-                        <ul>
-                            <li>Assigned task - 1</li>
-                            <li>Assigned task - 2</li>
-                            <li>Assigned task - 3</li>
-                        </ul>
-                    </div>
                     <div className="cta-card">
-                        <h2>My Tasks</h2>
-                        <p>MM-DD-YYYY</p>
-                        <button>Upload</button>
+                        <h2>Add Tasks</h2>
+                        <button onClick={handleRedirect}>
+                            Click Here to Upload
+                        </button>
                     </div>
                 </div>
             </div>

@@ -39,7 +39,7 @@ const AppRouter = () => {
             <Routes>
                 <Route path="/" element={<Homepage />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/my tasks" element={<MyTasks />} />
+                <Route path="/mytasks" element={<MyTasks />} />
                 <Route
                     path="/login"
                     element={user ? <Navigate to="/" /> : <Login />}
