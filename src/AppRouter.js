@@ -5,14 +5,12 @@ import {
     Route,
     Navigate,
 } from "react-router-dom";
-import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import MyTasks from "./pages/MyTasks";
-import EmployeeHomepage from "./pages/EmployeeHomepage";
+
 import ManagerHomepage from "./pages/ManagerHomepage";
+import EmployeeDetails from "./pages/EmployeeDetails"; // Import EmployeeDetails page
+import EditEmployee from "./pages/EditEmployee"; // Import EditEmployee page
+import TaskDetails from "./pages/TaskDetails"; // Import TaskDetails page
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const AppRouter = () => {
@@ -37,19 +35,17 @@ const AppRouter = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Homepage />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/my tasks" element={<MyTasks />} />
+                <Route path="/" element={<ManagerHomepage />} />
                 <Route
                     path="/login"
                     element={user ? <Navigate to="/" /> : <Login />}
                 />
-                <Route path="/register" element={<Register />} />
-                <Route path="/contact" element={<Contact />} />
                 <Route path="/managerhomepage" element={<ManagerHomepage />} />
+                <Route path="/employee-details/:id" element={<EmployeeDetails />} />
+                <Route path="/edit-employee/:id" element={<EditEmployee />} />
                 <Route
-                    path="/employeehomepage"
-                    element={<EmployeeHomepage />}
+                    path="/employee/:employeeId/tasks/:taskDate"
+                    element={<TaskDetails />}
                 />
             </Routes>
         </Router>
