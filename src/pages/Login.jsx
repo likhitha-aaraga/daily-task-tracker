@@ -16,15 +16,15 @@ const Login = () => {
             await signInWithEmailAndPassword(auth, email, password);
             navigate("/");
         } catch (error) {
-            setError(error.message);
+            setError("Invalid email or password.");
         }
     };
 
     return (
         <div className="auth-page">
             <div className="auth-container">
-                <h1>Login</h1>
-                <form onSubmit={handleSignIn}>
+                <h1 className="auth-heading">Welcome Back!</h1>
+                <form onSubmit={handleSignIn} className="login-form">
                     <div className="form-group">
                         <label>Email</label>
                         <input
@@ -32,6 +32,7 @@ const Login = () => {
                             placeholder="Enter your email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            className="auth-input"
                         />
                     </div>
                     <div className="form-group">
@@ -41,14 +42,12 @@ const Login = () => {
                             placeholder="Enter your password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            className="auth-input"
                         />
                     </div>
-                    <button type="submit">Login</button>
+                    <button type="submit" className="login-btn">Login</button>
                 </form>
-                {error && <p>Error: Email/Password invalid</p>}
-                {/* <p>
-                    Don't have an account? <a href="/register">Register</a>
-                </p> */}
+                {error && <p className="error-message">{error}</p>}
             </div>
         </div>
     );

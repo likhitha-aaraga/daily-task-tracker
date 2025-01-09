@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";  // Import Link for navigation
 import { db } from "../config/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";  // Added deleteDoc and doc for deleting
+import deleteIcon from "../assets/delete-icon.png";  // Import the delete icon
 import "./ManagerHomepage.scss";
 
 const ManagerHomepage = () => {
@@ -11,31 +13,42 @@ const ManagerHomepage = () => {
 
     const fetchTasks = async () => {
         try {
-            const tasksCollection = collection(db, "tasks"); // Reference to "tasks" collection
-            const tasksSnapshot = await getDocs(tasksCollection); // Fetch all documents
+            const tasksCollection = collection(db, "Employee-details");
+            const tasksSnapshot = await getDocs(tasksCollection);
             const tasksData = tasksSnapshot.docs.map((doc) => ({
-                id: doc.id, // Include document ID
-                ...doc.data(), // Spread the document data
+                id: doc.id,
+                ...doc.data(), 
             }));
             setEmployees(tasksData);
-            setFilteredEmployees(tasksData); // Update state with fetched data
-            setLoading(false); // Set loading to false after data is fetched
+            setFilteredEmployees(tasksData);
+            setLoading(false);
         } catch (error) {
             console.error("Error fetching tasks:", error);
             alert("Failed to fetch tasks. Please try again.");
         }
     };
-    console.log(filteredEmployees);
+
+    // Function to handle deleting an employee's task
+    const handleDelete = async (Employee_id) => {
+        try {
+            await deleteDoc(doc(db, "Employee-details", Employee_id));  // Delete the document from Firebase
+            fetchTasks();  // Re-fetch the tasks after deletion
+        } catch (error) {
+            console.error("Error deleting employee:", error);
+            alert("Failed to delete task. Please try again.");
+        }
+    };
+
     useEffect(() => {
         if (searchQuery.trim() === "") {
-            setFilteredEmployees(employees); // Show all employees if search query is empty
+            setFilteredEmployees(employees);
         } else {
             const filtered = employees.filter((employee) =>
-                employee.createdBy
+                employee.name
                     .toLowerCase()
                     .includes(searchQuery.toLowerCase())
             );
-            setFilteredEmployees(filtered); // Set filtered employees
+            setFilteredEmployees(filtered);
         }
     }, [searchQuery, employees]);
 
@@ -43,64 +56,78 @@ const ManagerHomepage = () => {
         fetchTasks();
     }, []);
 
-    // Render loading state
     if (loading) {
         return <p>Loading tasks...</p>;
     }
 
     return (
         <div className="manager-homepage">
-            <header>
-                <h2>Manager Dashboard</h2>
-            </header>
-
             <div className="employee-tasks">
-                {/* Flex container to align Employee Tasks and Search bar in the same line */}
-                <div className="tasks-header">
-                    <h3>Employee Tasks</h3>
-                    <div className="search-container">
-                        <input
-                            type="text"
-                            placeholder="Search by employee name..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
+                <h3>Employee Details</h3>
+                <div className="search-container">
+                    <input
+                        type="text"
+                        placeholder="Search by employee Name..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Employee Name</th>
-                            <th>Task</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredEmployees.length > 0 ? (
-                            filteredEmployees.map((employee, index) => (
-                                <tr key={index}>
-                                    <td>{employee.createdBy}</td>
-                                    <td>{employee.taskDetails}</td>
-                                    <td
-                                        className={
-                                            employee.status === "Completed"
-                                                ? "completed"
-                                                : "in-progress"
-                                        }
-                                    >
-                                        {employee.status}
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="3">No employees found</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
             </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Employee Name</th>
+                        <th>Employee Status</th>
+                        <th>Actions</th> {/* Added Actions column */}
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredEmployees.length > 0 ? (
+                        filteredEmployees.map((employee) => (
+                            <tr key={employee.Employee_id}>
+                                <td>
+                                    <Link to={`/employee-details/${employee.Employee_id}`} className="email-link">
+                                        {employee.Employee_id}
+                                    </Link>
+                                </td>
+                                <td>{employee.name}</td>
+                                <td
+                                    className={
+                                        employee.status === "Active"
+                                            ? "active-status"
+                                            : "inactive-status"
+                                    }
+                                >
+                                    {employee.status}
+                                </td>
+                                <td>
+                                    {/* Edit button */}
+                                    <Link to={`/edit-employee/${employee.Employee_id}`}>
+                                        <button className="edit-button">Edit</button>
+                                    </Link>
+
+                                    {/* Add a slash between Edit and Delete */}
+                                    <span> / </span>
+
+                                    {/* Delete icon without button box */}
+                                    <img
+                                        src={deleteIcon}
+                                        alt="Delete"
+                                        className="delete-icon"
+                                        onClick={() => handleDelete(employee.Employee_id)} // Delete on click
+                                    />
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4">No employees found</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
         </div>
     );
 };

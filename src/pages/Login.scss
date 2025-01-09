@@ -36,16 +36,91 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #e9f3f4;
-    margin-top: 138px;
-    margin-bottom: 138px;
+    background: linear-gradient(135deg, white 0%, white 100%);
+    height: 100vh;
+    margin: 0;
 }
 
 .auth-container {
     background-color: #ffffff;
     padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     width: 400px;
     max-width: 90%;
+    transition: all 0.3s ease;
+    animation: slideIn 0.5s ease-out;
+}
+
+.auth-heading {
+    text-align: center;
+    font-size: 2rem;
+    color: #2a8e9e;
+    margin-bottom: 20px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.auth-input {
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.auth-input:focus {
+    border-color: white;
+}
+
+.login-btn {
+    padding: 14px;
+    border: none;
+    background-color: #2a8e9e;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #2a8e9e;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 10px;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
