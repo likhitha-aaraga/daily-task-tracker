@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { getAuth } from "firebase/auth";
+import "./mytasks.scss";
 
 const MyTasks = () => {
     const [tasks, setTasks] = useState([]);
@@ -21,6 +22,7 @@ const MyTasks = () => {
         taskDetails: "",
         status: "",
         dueDate: "",
+        project: "",
     });
 
     useEffect(() => {
@@ -58,6 +60,7 @@ const MyTasks = () => {
                     const tasksData = querySnapshot.docs.map((doc) => ({
                         id: doc.id,
                         ...doc.data(),
+                        project: doc.data().project || "Unknown",
                     }));
                     setTasks(tasksData);
                 }
@@ -72,10 +75,8 @@ const MyTasks = () => {
         fetchTasks();
     }, []);
 
-    const isEditable = (createdAt) => {
-        const createdDate = new Date(createdAt.seconds * 1000).toDateString();
-        const todayDate = new Date().toDateString();
-        return createdDate === todayDate;
+    const isEditable = (status) => {
+        return status === "In Progress";
     };
 
     const handleEdit = (task) => {
@@ -84,16 +85,23 @@ const MyTasks = () => {
             taskDetails: task.taskDetails,
             status: task.status,
             dueDate: new Date(task.dueDate).toISOString().split("T")[0],
+            project: task.project || "Unknown",
         });
     };
 
     const handleSave = async () => {
+        if (!editDetails.project) {
+            alert("Please select a valid project.");
+            return;
+        }
+
         try {
             const taskRef = doc(db, "tasks", selectedTask.id);
             await updateDoc(taskRef, {
                 taskDetails: editDetails.taskDetails,
                 status: editDetails.status,
                 dueDate: editDetails.dueDate,
+                project: editDetails.project,
             });
 
             alert("Task updated successfully!");
@@ -117,36 +125,61 @@ const MyTasks = () => {
     };
 
     return (
-        <div>
+        <div className="mytasks-container">
             <h2>My Tasks (Last 7 Days)</h2>
             {loading && <p>Loading tasks...</p>}
             {error && <p style={{ color: "red" }}>{error}</p>}
             {!loading && tasks.length === 0 && (
                 <p>No tasks found in the last 7 days.</p>
             )}
-            <ul>
-                {tasks.map((task) => (
-                    <li key={task.id} style={{ marginBottom: "15px" }}>
-                        <strong>Task:</strong> {task.taskDetails} <br />
-                        <strong>Status:</strong> {task.status} <br />
-                        <strong>Due Date:</strong>{" "}
-                        {new Date(task.dueDate).toLocaleDateString()} <br />
-                        <strong>Created At:</strong>{" "}
-                        {new Date(
-                            task.createdAt.seconds * 1000
-                        ).toLocaleString()}{" "}
-                        <br />
-                        <button
-                            disabled={!isEditable(task.createdAt)}
-                            onClick={() => handleEdit(task)}
-                        >
-                            {isEditable(task.createdAt)
-                                ? "Edit"
-                                : "Edit Disabled"}
-                        </button>
-                    </li>
-                ))}
-            </ul>
+            {!loading && tasks.length > 0 && (
+                <table className="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Status</th>
+                            <th>Project</th>
+                            <th>Due Date</th>
+                            <th>Created At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tasks.map((task) => (
+                            <tr key={task.id}>
+                                <td>{task.taskDetails}</td>
+                                <td>{task.status}</td>
+                                <td>{task.project}</td>
+                                <td>
+                                    {new Date(
+                                        task.dueDate
+                                    ).toLocaleDateString()}
+                                </td>
+                                <td>
+                                    {new Date(
+                                        task.createdAt.seconds * 1000
+                                    ).toLocaleString()}
+                                </td>
+                                <td>
+                                    <button
+                                        className={
+                                            isEditable(task.status)
+                                                ? "edit-button"
+                                                : "edit-button disabled"
+                                        }
+                                        disabled={!isEditable(task.status)}
+                                        onClick={() => handleEdit(task)}
+                                    >
+                                        {isEditable(task.status)
+                                            ? "Edit"
+                                            : "Edit Disabled"}
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
 
             {selectedTask && (
                 <div className="edit-task-form">
@@ -184,6 +217,23 @@ const MyTasks = () => {
                             >
                                 <option value="In Progress">In Progress</option>
                                 <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Project:</label>
+                            <select
+                                value={editDetails.project}
+                                onChange={(e) =>
+                                    setEditDetails((prev) => ({
+                                        ...prev,
+                                        project: e.target.value,
+                                    }))
+                                }
+                                required
+                            >
+                                <option value="SNR">SNR</option>
+                                <option value="Unity">Unity</option>
+                                <option value="Heartbeat">Heartbeat</option>
                             </select>
                         </div>
                         <div>

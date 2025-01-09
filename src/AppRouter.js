@@ -11,8 +11,12 @@ import Register from "./pages/Register";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import MyTasks from "./pages/MyTasks";
+import Unity from "./pages/Unity";
+import SNR from "./pages/SNR";
+import Heartbeat from "./pages/Heartbeat";
 import EmployeeHomepage from "./pages/EmployeeHomepage";
 import ManagerHomepage from "./pages/ManagerHomepage";
+import MyProfile from "./pages/MyProfile";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const AppRouter = () => {
@@ -46,6 +50,10 @@ const AppRouter = () => {
                 />
                 <Route path="/register" element={<Register />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/unity" element={<Unity />} />
+                <Route path="/SNR" element={<SNR />} />
+                <Route path="/heartbeat" element={<Heartbeat />} />
+                <Route path="/myprofile" element={<MyProfile />} />
                 <Route path="/managerhomepage" element={<ManagerHomepage />} />
                 <Route
                     path="/employeehomepage"

@@ -1,14 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../config/firebase";
 import "../global.scss";
 
 const Header = () => {
     const [user, setUser] = useState(null);
+    const [userFullName, setUserFullName] = useState("");
 
     useEffect(() => {
         const auth = getAuth();
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
+
+            if (currentUser) {
+                try {
+                    const userDocRef = doc(db, "users", currentUser.uid);
+                    const userDoc = await getDoc(userDocRef);
+
+                    if (userDoc.exists()) {
+                        setUserFullName(userDoc.data().fullName);
+                    } else {
+                        console.error("User document not found.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching user full name:", error);
+                }
+            }
         });
 
         return () => unsubscribe();
@@ -37,13 +55,10 @@ const Header = () => {
             </div>
             <div className="nav-links">
                 <a href="/about">About</a>
-                {/* <a href="/contact">Contact</a> */}
-                {/* <a href="/managerhomepage">Manger Dashboard</a> */}
-                <a href="/employeehomepage">AddTask</a>
+                <a href="/employeehomepage">UploadTask</a>
                 {user ? (
                     <>
-                        <p>Welcome, {user.email}</p>
-
+                        <p>Welcome, {userFullName}</p>
                         <button onClick={handleLogout}>Logout</button>
                     </>
                 ) : (

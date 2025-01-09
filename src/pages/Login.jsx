@@ -46,9 +46,9 @@ const Login = () => {
                     <button type="submit">Login</button>
                 </form>
                 {error && <p>Error: Email/Password invalid</p>}
-                {/* <p>
+                <p>
                     Don't have an account? <a href="/register">Register</a>
-                </p> */}
+                </p>
             </div>
         </div>
     );

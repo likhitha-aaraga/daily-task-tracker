@@ -10,6 +10,7 @@ const EmployeeHomepage = () => {
     const [taskDetails, setTaskDetails] = useState("");
     const [status, setStatus] = useState("Select Status");
     const [dueDate, setDueDate] = useState(null);
+    const [project, setProject] = useState("Select Project");
 
     const handleAddTask = async (e) => {
         e.preventDefault();
@@ -40,6 +41,7 @@ const EmployeeHomepage = () => {
             await addDoc(collection(db, "tasks"), {
                 taskDetails: taskDetails.trim(),
                 status: status,
+                project: project,
                 dueDate: dueDate.toISOString(),
                 createdAt: serverTimestamp(),
                 createdBy: currentUser.email,
@@ -47,6 +49,7 @@ const EmployeeHomepage = () => {
 
             setTaskDetails("");
             setStatus("Select Status");
+            setProject("Select Project");
             setDueDate(null);
 
             alert("Task added successfully!");
@@ -85,6 +88,23 @@ const EmployeeHomepage = () => {
                         </option>
                         <option value="In Progress">In Progress</option>
                         <option value="Completed">Completed</option>
+                    </select>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="project">Project:</label>
+                    <select
+                        id="project"
+                        value={project}
+                        onChange={(e) => setProject(e.target.value)}
+                        required
+                    >
+                        <option value="Select Project" disabled>
+                            Select Project
+                        </option>
+                        <option value="SNR">SNR</option>
+                        <option value="Unity">Unity</option>
+                        <option value="Heartbeat">Heartbeat</option>
                     </select>
                 </div>
 

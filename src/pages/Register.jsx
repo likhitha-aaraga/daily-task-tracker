@@ -1,33 +1,163 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth, db } from "../config/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import "./Register.scss";
 
 const Register = () => {
+    const [formData, setFormData] = useState({
+        fullName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        mobile: "",
+        role: "",
+    });
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        setError("");
+        setSuccess("");
+
+        const { fullName, email, password, confirmPassword, mobile, role } =
+            formData;
+
+        // Validation
+        if (
+            !fullName ||
+            !email ||
+            !password ||
+            !confirmPassword ||
+            !mobile ||
+            !role
+        ) {
+            setError("Please fill in all fields.");
+            return;
+        }
+        if (password !== confirmPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+            const user = userCredential.user;
+
+            await setDoc(doc(db, "users", user.uid), {
+                fullName,
+                email,
+                mobile,
+                role,
+                createdAt: new Date().toISOString(),
+            });
+
+            setSuccess("Registration successful!");
+            setFormData({
+                fullName: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                mobile: "",
+                role: "",
+            });
+
+            setTimeout(() => {
+                navigate("/");
+            }, 2000);
+        } catch (error) {
+            console.error("Error registering user:", error);
+            setError("Failed to register. Please try again.");
+        }
+    };
+
     return (
         <div className="auth-page">
             <div className="auth-container">
                 <h1>Register</h1>
-                <form>
+                {error && <p className="error">{error}</p>}
+                {success && <p className="success">{success}</p>}
+                <form onSubmit={handleRegister}>
                     <div className="form-group">
                         <label>Full Name</label>
-                        <input type="text" placeholder="Enter your full name" />
+                        <input
+                            type="text"
+                            name="fullName"
+                            placeholder="Enter your full name"
+                            value={formData.fullName}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
                     <div className="form-group">
                         <label>Email</label>
-                        <input type="email" placeholder="Enter your email" />
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
                     <div className="form-group">
                         <label>Password</label>
                         <input
                             type="password"
+                            name="password"
                             placeholder="Enter your password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
                         />
                     </div>
                     <div className="form-group">
                         <label>Confirm Password</label>
                         <input
                             type="password"
+                            name="confirmPassword"
                             placeholder="Confirm your password"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            required
                         />
+                    </div>
+                    <div className="form-group">
+                        <label>Mobile Number</label>
+                        <input
+                            type="text"
+                            name="mobile"
+                            placeholder="Enter your mobile number"
+                            value={formData.mobile}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Role</label>
+                        <select
+                            name="role"
+                            value={formData.role}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">Select Role</option>
+                            <option value="Employee">Employee</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Admin">Admin</option>
+                        </select>
                     </div>
                     <button type="submit">Register</button>
                 </form>

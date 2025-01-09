@@ -23,6 +23,11 @@ button {
     transition: background-color 0.3s;
     width: fit-content;
 }
+
+th {
+    background-color: #2a8e9e;
+    color: #fff;
+}
 .container {
     display: flex;
     flex-direction: column;
