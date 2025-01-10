@@ -172,7 +172,7 @@ const MyTasks = () => {
                                     >
                                         {isEditable(task.status)
                                             ? "Edit"
-                                            : "Edit Disabled"}
+                                            : "Edit"}
                                     </button>
                                 </td>
                             </tr>

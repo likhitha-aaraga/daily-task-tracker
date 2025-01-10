@@ -3,7 +3,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./EmployeeHomepage.scss";
 import { db } from "../config/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+    collection,
+    addDoc,
+    serverTimestamp,
+    getDoc,
+    doc,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const EmployeeHomepage = () => {
@@ -38,6 +44,19 @@ const EmployeeHomepage = () => {
                 alert("User is not logged in.");
                 return;
             }
+
+            const userRef = doc(db, "users", currentUser.uid);
+            const userDoc = await getDoc(userRef);
+
+            if (!userDoc.exists()) {
+                alert("User information not found.");
+                return;
+            }
+
+            const employeeId = userDoc.data().employeeId;
+
+            const taskId = Math.floor(1000 + Math.random() * 9000).toString();
+
             await addDoc(collection(db, "tasks"), {
                 taskDetails: taskDetails.trim(),
                 status: status,
@@ -45,6 +64,8 @@ const EmployeeHomepage = () => {
                 dueDate: dueDate.toISOString(),
                 createdAt: serverTimestamp(),
                 createdBy: currentUser.email,
+                employee_id: employeeId,
+                task_id: taskId,
             });
 
             setTaskDetails("");

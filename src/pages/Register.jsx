@@ -23,6 +23,10 @@ const Register = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const generateEmployeeId = () => {
+        return Math.floor(1000 + Math.random() * 9000);
+    };
+
     const handleRegister = async (e) => {
         e.preventDefault();
         setError("");
@@ -31,7 +35,6 @@ const Register = () => {
         const { fullName, email, password, confirmPassword, mobile, role } =
             formData;
 
-        // Validation
         if (
             !fullName ||
             !email ||
@@ -56,11 +59,15 @@ const Register = () => {
             );
             const user = userCredential.user;
 
+            const employeeId = generateEmployeeId();
+
             await setDoc(doc(db, "users", user.uid), {
                 fullName,
                 email,
                 mobile,
                 role,
+                employeeId: `${employeeId}`,
+                employeeStatus: "Active",
                 createdAt: new Date().toISOString(),
             });
 
@@ -155,8 +162,6 @@ const Register = () => {
                         >
                             <option value="">Select Role</option>
                             <option value="Employee">Employee</option>
-                            <option value="Manager">Manager</option>
-                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                     <button type="submit">Register</button>

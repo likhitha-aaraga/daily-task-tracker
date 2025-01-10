@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Login.scss";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -12,11 +13,34 @@ const Login = () => {
 
     const handleSignIn = async (e) => {
         e.preventDefault();
+        setError("");
+
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            navigate("/");
+            const userCredential = await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+            const user = userCredential.user;
+
+            const userDocRef = doc(db, "users", user.uid);
+            const userDocSnapshot = await getDoc(userDocRef);
+
+            if (userDocSnapshot.exists()) {
+                const userData = userDocSnapshot.data();
+                if (userData.role === "Manager") {
+                    navigate("/managerhomepage"); // Navigate to Manager Homepage
+                } else if (userData.role === "Employee") {
+                    navigate("/"); // Navigate to Employee Homepage
+                } else {
+                    setError("Role not recognized.");
+                }
+            } else {
+                setError("User details not found.");
+            }
         } catch (error) {
-            setError(error.message);
+            console.error("Login Error:", error);
+            setError("Failed to log in. Please check your credentials.");
         }
     };
 
@@ -32,6 +56,7 @@ const Login = () => {
                             placeholder="Enter your email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
                     </div>
                     <div className="form-group">
@@ -41,11 +66,12 @@ const Login = () => {
                             placeholder="Enter your password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                     </div>
                     <button type="submit">Login</button>
                 </form>
-                {error && <p>Error: Email/Password invalid</p>}
+                {error && <p className="error">{error}</p>}
                 <p>
                     Don't have an account? <a href="/register">Register</a>
                 </p>
